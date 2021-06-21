@@ -1,0 +1,105 @@
+1.	Open AWS Management Console https://aws.amazon.com/console/
+2.	Log in to the console using your email and password.
+3.	Then, for launching a VM, go to EC2 under Compute.
+       
+ Q.  What is a VM?
+A Virtual Machine (VM) is a compute  resource that uses software instead of a physical computer to run programs and deploy apps. It is software that runs programs or applications without being tied to a physical machine.
+           
+ Q. What is Compute?
+The Compute category of services are key resources that allow you to carry out computational abilities via a series of
+instructions used by applications and systems.
+ 
+ Q. What is EC2?
+Amazon Elastic Compute Cloud (Amazon EC2) is a web service that provides secure, resizable compute capacity in  the cloud. It provides capability to launch a VM on the cloud.
+ 
+4. Click on Create new Instance.
+ 
+Q. What is EC2 instance?
+An EC2 instance is a virtual server in Amazon's Elastic Compute Cloud for running applications on the Amazon Web
+Services infrastructure.
+ 
+5.	Now, we need to select AMI.
+ 
+  Q. What is AMI?
+ An Amazon Machine Image is a special type of virtual appliance that is used to create a virtual machine within the 
+Amazon Elastic Compute Cloud. It serves as the basic unit of deployment for services delivered using EC2. It serves as a template.
+ 
+6.	Now, we need to Choose an Instance Type. (basic specifications like number of CPU)
+7.	Next, we have to Configure Instance Details. (details like Number of Instances, region, subnet, etc.)
+8.	Next, we have to Add Storage.
+9.	Next, Add Tags. (optional)
+10.	Next, Add Security Group. (here we include the firewall rules for access to our instance and traffic)
+11.	Finally, Review And Launch.
+12.	It asks for a key-pair. (Note: It's necessary to have the key pair downloaded in the system before launching the instance so that we can connect to the instance via SSH.)
+ 
+  Q. What is key-pair?
+ A key-pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an instance.
+ 
+  Q. What is SSH?
+SSH or Secure Shell is a network communication protocol that enables two computers to communicate and share data.
+                
+
+Let's connect to our Instance via putty.
+ 
+ Q. What is Putty?
+PuTTy is a software terminal emulator for Windows and Linux. It is an open source application that supports multiple network protocols, such as - SSH, Telnet, SCP, rlogin, and serial port.
+ 
+13.	For this, we need Public IP of our instance and key pair we downloaded earlier in .ppk format. (it is originally in .pem format.)
+ 
+Now, let's run a simple application on this instance. For this task, I have created a Simple Calculator using HTML, CSS and JavaScript and hosted on GitHub.
+ 
+14.	Inside Instance terminal, commands to be run are:
+•	sudo su : It provides root access
+•	yum update : It ensures that everything is up to date.
+•	yum install httpd : It installs apache webserver on our instance.
+
+  Q. What is Apache?
+ The Apache HTTP Server, commonly called Apache, is a free, widely-used and open-source cross-platform web server software. It mainly contains two folder parts: /var/www/html and /var/www/cgi-bin. The static files are kept in html folder while cgi-bin folder is for dynamic scripts.
+ 
+•	yum install git : It installs git in our VM. 
+•	git clone "https://www.github.com/<account>/<repository>.git" : It clones the repository from GitHub to our system.
+•	mv /home/SimpleCalculator/calculator.html /var/www/html : It moves calculator.html file to apache's html folder.
+•	mv /home/SimpleCalculator/calculator.css /var/www/html : It moves calculator.css file to apache's html folder.
+•	httpd -k start : It starts the apache webserver.
+ 
+Now, let's check whether the application is hosted correctly over internet or not.
+ 
+15.	On browser, type http://<public_ip_of_instance>/calculator.html 
+If everything is correct, then website shows up. 
+ 
+Now, there's a problem that this URL is accessible till the instance is running. But it is not possible to leave the instance switched on forever as it will incur charges. So, let's make it permanently accessible using another service of AWS called S3.
+ 
+16.	Open S3 on AWS Console under Storage.
+ 
+  Q. What is S3?
+Amazon S3 is an object storage service on AWS. It allows to upload, store, and download any type of files up to 5TB in size.
+ 
+17.	Choose Create Bucket. (Bucket name must be unique.)
+ 
+ Q. What is a bucket?
+ An Amazon S3 bucket is a public cloud storage resource available in AWS S3. Amazon S3 buckets, similar to file folders, store objects, consist of data and its descriptive metadata.
+ 
+18.	Set region and Public Accessibility. (Since, we want to make our site publicly accessible so we will turn it off.)
+
+
+19.	Add policy to make the bucket publicly accessible.
+{
+"Version":"2012-10-17",
+"Statement":[{
+"Sid":"PublicReadGetObject",
+"Effect":"Allow",
+"Principal": "*",
+"Action":["s3:GetObject"],
+"Resource":["arn:aws:s3:::<BUCKET NAME>/*"]
+}]}
+ 
+20.	Now, we will upload objects i.e., files into the bucket. (Here, .html and .css files)
+
+21.	Now, in Properties, we will go to Static Website Hosting and enable it. We will choose the main html file for the index file. 
+ 
+22.	After doing all this, we get a unique URL to access our website. Click on that link, and see the result.
+Now, even if we terminate the instance, we can still see our application using this link.
+ 
+ 
+                                                                             THANK YOU
+
